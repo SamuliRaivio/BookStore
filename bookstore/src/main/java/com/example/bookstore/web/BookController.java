@@ -11,16 +11,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bookstore.domain.Book;
 import com.example.bookstore.domain.BookRepository;
 import com.example.bookstore.domain.CategoryRepository;
+
+
 
 @Controller
 public class BookController {
 	
 	@Autowired
 	private BookRepository repository;
+	
 	@Autowired
 	private CategoryRepository cRepository;
 	
@@ -30,6 +35,22 @@ public class BookController {
 		model.addAttribute("book", repository.findAll());
 		return "booklist";
 	}
+	
+	//Rest hae kaikki kirjat
+	@RequestMapping(value="/books", method = RequestMethod.GET)
+	public @ResponseBody List<Book> bookListRest() {
+		return (List<Book>) repository.findAll();
+	}
+	
+	
+	
+	//Rest hae kirja id:llä
+	@RequestMapping(value="/book/{id}", method = RequestMethod.GET)
+    public @ResponseBody Optional<Book> findBookRest(@PathVariable("id") Long id) {	
+    	return repository.findById(id);
+    } 
+	
+	
 	
 	@RequestMapping(value = "/addbook")
 	public String addBook(Model model){
